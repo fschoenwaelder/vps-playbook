@@ -44,7 +44,14 @@
     dest: "/home/{{ os_user }}/.dotfiles"
     version: main
     force: true
-    become_user: "{{ os_user }}"
+
+- name: Recursively change ownership of .dotfiles
+  ansible.builtin.file:
+    path: "/home/{{ os_user }}/.dotfiles"
+    state: directory
+    recurse: yes
+    owner: "{{ os_user }}"
+    group: "{{ os_user }}"
 
 - name: Ensure login shell of {{ os_user }} is set to `/bin/zsh`.
   ansible.builtin.command: usermod --shell /usr/bin/zsh {{ os_user }}
