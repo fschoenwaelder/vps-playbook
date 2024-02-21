@@ -65,6 +65,7 @@
   loop:
     - "/home/{{ os_user }}/.bashrc"
     - "/home/{{ os_user }}/.bash_logout"
+    - "/home/{{ os_user }}/.dotfiles/.git"
 
 - name: Ensure .dotfiles symlinks are set
   become: true
