@@ -45,3 +45,20 @@
     version: main
     force: true
 
+- name: Ensure login shell of {{ os_user }} is set to `/bin/zsh`.
+  ansible.builtin.command: usermod --shell /usr/bin/zsh {{ os_user }}
+  become: true
+  changed_when: false
+
+- name: Ensure home directory is cleaned up
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/home/{{ os_user }}/.bashrc"
+    - "/home/{{ os_user }}/.bash_logout"
+
+- name: Ensure symlinks are set
+  ansible.builtin.shell: stow *
+  args:
+    chdir: "/home/{{ os_user }}/.dotfiles"
