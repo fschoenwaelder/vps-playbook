@@ -78,12 +78,12 @@
   with_nested:
     - "{{ list_one }}"
     - "{{ list_two }}"
-    
-- name: Ensure .dotfiles symlinks are set
-  become: true
-  ansible.builtin.shell: stow *
-  args:
-    chdir: "/home/{{ item }}/.dotfiles"
-  loops:
-    - "{{ os_user }}"
-    - "root"
+
+# - name: Ensure .dotfiles symlinks are set
+#   become: true
+#   ansible.builtin.shell: stow *
+#   args:
+#     chdir: "/home/{{ item }}/.dotfiles"
+#   loops:
+#     - "{{ os_user }}"
+#     - "root"
