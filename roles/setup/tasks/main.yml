@@ -38,12 +38,15 @@
     ssh_key_bits: 4096
     expires: -1
 
-- name: Ensure dotfiles repository is cloned to {{ os_user }} home directory.
+- name: Ensure dotfiles repository is cloned to {{ item }} home directory.
   ansible.builtin.git:
-    repo: "https://{{ github_user }}:{{ github_token}}@github.com/{{ github_user }}/vps-dotfiles.git"
-    dest: "/home/{{ os_user }}/.dotfiles"
+    repo: "https://{{ github_user }}:{{ github_token }}@github.com/{{ github_user }}/vps-dotfiles.git"
+    dest: "/home/{{ item }}/.dotfiles"
     version: main
     force: true
+  loop:
+    - "{{ os_user }}"
+    - "root"
 
 - name: Recursively change ownership of .dotfiles
   ansible.builtin.file:
@@ -53,23 +56,28 @@
     owner: "{{ os_user }}"
     group: "{{ os_user }}"
 
-- name: Ensure login shell of {{ os_user }} is set to `/bin/zsh`.
-  ansible.builtin.command: usermod --shell /usr/bin/zsh {{ os_user }}
+- name: Ensure login shell of {{ item }} is set to `/bin/zsh`.
+  ansible.builtin.command: usermod --shell /usr/bin/zsh {{ item }}
   become: true
   changed_when: false
+  loop:
+    - "{{ os_user }}"
+    - "root"
 
 - name: Ensure home directory is cleaned up
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "/home/{{ item[0] }}/{{ item[1] }}"
     state: absent
-  loop:
-    - "/home/{{ os_user }}/.bashrc"
-    - "/home/{{ os_user }}/.bash_logout"
-    - "/home/{{ os_user }}/.dotfiles/.git"
+  with_nested:
+    - [ 'root', '{{ os_user }}' ]
+    - [ '.bashrc', '.bash_logout', '.dotfiles/.git']
 
 - name: Ensure .dotfiles symlinks are set
   become: true
-  become_user: '{{ os_user }}'
+  become_user: '{{ item }}'
   ansible.builtin.shell: stow *
   args:
-    chdir: "/home/{{ os_user }}/.dotfiles"
+    chdir: "/home/{{ item }}/.dotfiles"
+  loops:
+    - "{{ os_user }}"
+    - "root"
