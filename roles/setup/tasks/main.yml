@@ -72,10 +72,11 @@
     - [ 'root', '{{ os_user }}' ]
     - [ '.bashrc', '.bash_logout', '.dotfiles/.git' ]
 
-- name: "Ensure .dotfiles symlinks are set"
-  ansible.builtin.shell: stow *
-  args:
-    chdir: "/home/{{ item }}/.dotfiles"
-  loops:
+- name: Ensure .dotfiles symlinks are set
+  ansible.builtin.shell:
+    cmd: stow *
+    args:
+      chdir: "/home/{{ item }}/.dotfiles"
+  loop:
     - "{{ os_user }}"
     - "root"
