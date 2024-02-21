@@ -69,6 +69,6 @@
 - name: Ensure .dotfiles symlinks are set
   become: true
   become_user: '{{ os_user }}'
-  ansible.builtin.shell: stow --target=/home/{{ os_user }}/ ./*
+  ansible.builtin.shell: stow *
   args:
     chdir: "/home/{{ os_user }}/.dotfiles"
