@@ -38,15 +38,19 @@
     ssh_key_bits: 4096
     expires: -1
 
-- name: Ensure dotfiles repository is cloned to {{ item }} home directory.
+- name: Ensure dotfiles repository is cloned to {{ os_user }} home directory.
   ansible.builtin.git:
     repo: "https://{{ github_user }}:{{ github_token }}@github.com/{{ github_user }}/vps-dotfiles.git"
-    dest: "/home/{{ item }}/.dotfiles"
+    dest: "/home/{{ os_user }}/.dotfiles"
     version: main
     force: true
-  loop:
-    - "{{ os_user }}"
-    - "root"
+
+- name: Ensure dotfiles repository is cloned to root home directory.
+  ansible.builtin.git:
+    repo: "https://{{ github_user }}:{{ github_token }}@github.com/{{ github_user }}/vps-dotfiles.git"
+    dest: "/root/.dotfiles"
+    version: main
+    force: true
 
 - name: Recursively change ownership of .dotfiles
   ansible.builtin.file:
@@ -84,7 +88,10 @@
   ansible.builtin.shell:
     cmd: stow *
     args:
-      chdir: "/home/{{ item }}/.dotfiles"
-  loop:
-    - "{{ os_user }}"
-    - "root"
+      chdir: "/home/{{ os_user }}/.dotfiles"
+
+- name: Ensure .dotfiles symlinks are set
+  ansible.builtin.shell:
+    cmd: stow *
+    args:
+      chdir: "/root/.dotfiles"
