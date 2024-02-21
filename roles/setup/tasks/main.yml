@@ -64,12 +64,20 @@
     - "{{ os_user }}"
     - "root"
 
-- name: Ensure home directory is cleaned up
+- name: Ensure {{ os_user }} home directory is cleaned up
   ansible.builtin.file:
     path: "/home/{{ item[0] }}/{{ item[1] }}"
     state: absent
   with_nested:
-    - [ 'root', '{{ os_user }}' ]
+    - [ '{{ os_user }}' ]
+    - [ '.bashrc', '.bash_logout', '.dotfiles/.git' ]
+
+- name: Ensure root home directory is cleaned up
+  ansible.builtin.file:
+    path: "/root/{{ item[0] }}/{{ item[1] }}"
+    state: absent
+  with_nested:
+    - [ 'root' ]
     - [ '.bashrc', '.bash_logout', '.dotfiles/.git' ]
 
 - name: Ensure .dotfiles symlinks are set
