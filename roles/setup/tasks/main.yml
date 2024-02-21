@@ -1,3 +1,13 @@
+- name: Install software-properties-common
+  ansible.builtin.apt:
+    pkg:
+      - software-properties-common 
+
+- name: Add PHP repository
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+    
 # install neccessary packages
 - name: Update OS
   become: true
@@ -5,11 +15,6 @@
     upgrade: yes
     update_cache: yes
     cache_valid_time: 86400 #One day
-
-- name: Add PHP repository
-  ansible.builtin.apt_repository:
-    repo: ppa:ondrej/php
-    state: present
 
 - name: Ensure neccessary packages are installed.
   ansible.builtin.apt:
