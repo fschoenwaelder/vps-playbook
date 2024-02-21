@@ -1,0 +1,27 @@
+---
+- name: VPS Server Setup
+  hosts: localhost
+  connection: local
+  become: true
+  vars_prompt:
+    - name: "os_user"
+      prompt: Please enter the name of the new os user
+      private: false
+
+    - name: "os_user_pw"
+      prompt: "Enter os user password"
+      private: yes
+
+    - name: "github_user"
+      prompt: Please enter yout github username
+      private: false
+
+    - name: "github_token"
+      prompt: Please enter your github PAT token
+      private: true
+      encrypt: bcrypt
+      confirm: true
+      salt_size: 32
+
+  roles:
+    - role: setup

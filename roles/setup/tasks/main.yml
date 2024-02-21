@@ -1,0 +1,52 @@
+# install neccessary packages
+- name: Update OS
+  become: true
+  ansible.builtin.apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400 #One day
+
+- name: Add PHP repository
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+
+- name: Ensure neccessary packages are installed.
+  ansible.builtin.apt:
+    pkg:
+      - stow
+      - zsh
+      - zsh-syntax-highlighting
+      - wget
+      - curl
+      - nginx
+      - php8.2
+      - php8.2-cli
+      - php8.2-bz2
+      - php8.2-mbstring
+      - php8.2-intl
+      - certbot
+      - htop
+      - docker
+      - python3
+    state: present
+
+- name: Add new user
+  ansible.builtin.user:
+    name: {{ os_user }}
+    shell: /bin/zsh
+    create_home: true
+    generate_ssh_key: yes
+    password: {{ os_user_pw }}
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+    ssh_public_key: true
+    expires: -1
+
+- name: Ensure dotfiles repository is cloned to {{ os_user }} home directory.
+  ansible.builtin.git:
+    repo: https://{{ github_user }}:{{ github_token}}@github.com/{{ github_user }}/vps-dotfiles.git
+    dest: "/home/{{ os_user }}/.dotfiles"
+    version: main
+    force: true
+
