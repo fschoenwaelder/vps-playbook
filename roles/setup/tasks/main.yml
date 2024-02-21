@@ -35,7 +35,6 @@
     password: "{{ os_user_pw }}"
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
-    ssh_public_key: true
     expires: -1
 
 - name: Ensure dotfiles repository is cloned to {{ os_user }} home directory.
