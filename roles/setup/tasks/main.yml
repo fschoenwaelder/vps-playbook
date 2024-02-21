@@ -32,9 +32,10 @@
     shell: /bin/zsh
     create_home: true
     generate_ssh_key: yes
-    password: "{{ os_user_pw }}"
-    ssh_key_bits: 4096
+    password: "{{ 'password' | password_hash('sha512') }}"
+    update_password: on_create
     ssh_key_file: .ssh/id_rsa
+    ssh_key_bits: 4096
     expires: -1
 
 - name: Ensure dotfiles repository is cloned to {{ os_user }} home directory.
