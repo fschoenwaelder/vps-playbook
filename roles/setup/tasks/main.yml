@@ -91,7 +91,6 @@
       chdir: "/home/{{ os_user }}/.dotfiles"
 
 - name: Ensure .dotfiles symlinks are set
-  ansible.builtin.shell:
-    cmd: stow *
-    args:
-      chdir: "/root/.dotfiles"
+  ansible.builtin.shell: stow *
+  args:
+    chdir: "/root/.dotfiles"
