@@ -1,13 +1,3 @@
-- name: Install software-properties-common
-  ansible.builtin.apt:
-    pkg:
-      - software-properties-common 
-
-- name: Add PHP repository
-  ansible.builtin.apt_repository:
-    repo: ppa:ondrej/php
-    state: present
-    
 # install neccessary packages
 - name: Update OS
   become: true
