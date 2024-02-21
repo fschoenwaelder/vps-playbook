@@ -33,11 +33,11 @@
 
 - name: Add new user
   ansible.builtin.user:
-    name: {{ os_user }}
+    name: "{{ os_user }}"
     shell: /bin/zsh
     create_home: true
     generate_ssh_key: yes
-    password: {{ os_user_pw }}
+    password: "{{ os_user_pw }}"
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
     ssh_public_key: true
@@ -45,7 +45,7 @@
 
 - name: Ensure dotfiles repository is cloned to {{ os_user }} home directory.
   ansible.builtin.git:
-    repo: https://{{ github_user }}:{{ github_token}}@github.com/{{ github_user }}/vps-dotfiles.git
+    repo: "https://{{ github_user }}:{{ github_token}}@github.com/{{ github_user }}/vps-dotfiles.git"
     dest: "/home/{{ os_user }}/.dotfiles"
     version: main
     force: true
