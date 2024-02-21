@@ -44,6 +44,7 @@
     dest: "/home/{{ os_user }}/.dotfiles"
     version: main
     force: true
+    become_user: "{{ os_user }}"
 
 - name: Ensure login shell of {{ os_user }} is set to `/bin/zsh`.
   ansible.builtin.command: usermod --shell /usr/bin/zsh {{ os_user }}
