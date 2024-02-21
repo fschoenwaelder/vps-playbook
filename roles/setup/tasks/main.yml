@@ -72,18 +72,10 @@
     - [ 'root', '{{ os_user }}' ]
     - [ '.bashrc', '.bash_logout', '.dotfiles/.git' ]
 
-- name: with_nested
-  ansible.builtin.debug:
-    msg: "{{ item.0 }} - {{ item.1 }}"
-  with_nested:
-    - "{{ list_one }}"
-    - "{{ list_two }}"
-
-# - name: Ensure .dotfiles symlinks are set
-#   become: true
-#   ansible.builtin.shell: stow *
-#   args:
-#     chdir: "/home/{{ item }}/.dotfiles"
-#   loops:
-#     - "{{ os_user }}"
-#     - "root"
+- name: "Ensure .dotfiles symlinks are set"
+  ansible.builtin.shell: stow *
+  args:
+    chdir: "/home/{{ item }}/.dotfiles"
+  loops:
+    - "{{ os_user }}"
+    - "root"
